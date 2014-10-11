@@ -61,6 +61,8 @@ public class MainActivity extends SalesforceActivity {
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setTitle("Loading Your Schedule...");
         mProgressDialog.show();
+
+        setTitle("Upcoming Events");
     }
 
     @Override
