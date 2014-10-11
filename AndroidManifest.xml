@@ -14,7 +14,7 @@
 		<!-- Launcher screen -->
 		<activity android:name=".MainActivity"
 		    android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+			android:theme="@android:style/Theme.Holo.Light">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -22,7 +22,7 @@
 		</activity>
 	</application>
 
-	<uses-sdk android:minSdkVersion="8" />
+	<uses-sdk android:minSdkVersion="11" />
 
     <!--
         GCM permission to ensure that only this application can
