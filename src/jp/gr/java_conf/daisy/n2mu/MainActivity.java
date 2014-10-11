@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +84,39 @@ public class MainActivity extends SalesforceActivity {
     }
 
     private void fetchIncomingEvent() {
+        boolean uiDebug = true;
+        if (uiDebug) {
+            ListView contactList = (ListView) findViewById(R.id.contacts_list);
+            mDateToContactId = new HashMap<Date, List<String>>();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+            try {
+                mDateToContactId.put(dateFormat.parse("2014-10-10 10:10"), Arrays.asList(new String[]{"1", "2", "3"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-10 11:30"), Arrays.asList(new String[]{"1"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-11 10:10"), Arrays.asList(new String[]{"4", "2"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-10 8:10"), Arrays.asList(new String[]{"5"}));
+            } catch (ParseException e) {
+
+            }
+            mIdToContact = new HashMap<String, Contact>();
+            mIdToContact.put("1", new Contact("Jon Smith", "ABC, inc", "http://uifaces.com/brad_frost"));
+            mIdToContact.put("2", new Contact("Make Nish", "Salesforce", "http://uifaces.com/c_southam"));
+            mIdToContact.put("3", new Contact("Amanda Lee", "Hitachi", "http://uifaces.com/adellecharles"));
+            mIdToContact.put("4", new Contact("Kent Suzuki", "UBC, inc", "http://uifaces.com/rssems"));
+            mIdToContact.put("5", new Contact("Nishida Ume", "OPP, inc", "http://uifaces.com/sindresorhus"));
+            contactList.setAdapter(
+                    new EventContactAdapter(MainActivity.this, mDateToContactId));
+            contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
+                    startActivity(intent);
+                }
+            });
+            contactList.setDivider(null);
+            mProgressDialog.hide();
+            return;
+        }
+
         RestRequest restRequest
                 = getRequestForQuery("SELECT StartDateTime, WhoId FROM Event Where StartDateTime >= TODAY");
         mClient.sendAsync(restRequest, new AsyncRequestCallback() {
@@ -122,10 +156,9 @@ public class MainActivity extends SalesforceActivity {
                 showErrorToast(exception);
             }
         });
-        Log.d("TokenToken", mClient.getAuthToken());
     }
 
-    private void fetchContact(List<String> contactIds) {
+    private void fetchContact(final List<String> contactIds) {
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("SELECT Id,Name,Title,Department,PhotoUrl FROM Contact Where Id IN (");
         for (int i = 0; i < contactIds.size(); i++) {
