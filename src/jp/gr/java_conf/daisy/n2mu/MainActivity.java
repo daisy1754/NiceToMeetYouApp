@@ -26,12 +26,20 @@
  */
 package jp.gr.java_conf.daisy.n2mu;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -51,72 +59,81 @@ public class MainActivity extends SalesforceActivity {
 
     private RestClient mClient;
     private ArrayAdapter<String> mListAdapter;
+    private ProgressDialog mProgressDialog;
+    private Map<String, Object> mIdToPeople;
+    private boolean loadingFired;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-    }
-    
-    @Override 
-    public void onResume() {
-        findViewById(R.id.root).setVisibility(View.INVISIBLE);
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setTitle("Loading Your Schedule...");
 
         mListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
         ((ListView) findViewById(R.id.contacts_list)).setAdapter(mListAdapter);
-        
-        super.onResume();
-    }        
+    }
 
     @Override
     public void onResume(RestClient client) {
         mClient = client;
-        findViewById(R.id.root).setVisibility(View.VISIBLE);
+        if (loadingFired) {
+            return;
+        }
+        loadingFired = true;
+        fetchIncomingEvent();
     }
 
-    /**
-     * Called when "Fetch Contacts" button is clicked
-     * 
-     * @param v
-     * @throws UnsupportedEncodingException 
-     */
-    public void onFetchContactsClick(View v) throws UnsupportedEncodingException {
-        sendRequest("SELECT Name FROM Contact");
-    }
-
-    /**
-     * Called when "Fetch Accounts" button is clicked
-     * 
-     * @param v
-     * @throws UnsupportedEncodingException 
-     */
-    public void onFetchAccountsClick(View v) throws UnsupportedEncodingException {
-        sendRequest("SELECT Name FROM Account");
-    }    
-    
-    private void sendRequest(String soql) throws UnsupportedEncodingException {
-        RestRequest restRequest = RestRequest.getRequestForQuery(getString(R.string.api_version), soql);
-
+    private void fetchIncomingEvent() {
+        RestRequest restRequest
+                = getRequestForQuery("SELECT StartDateTime, WhoId FROM Event Where StartDateTime >= TODAY");
         mClient.sendAsync(restRequest, new AsyncRequestCallback() {
             @Override
             public void onSuccess(RestRequest request, RestResponse result) {
                 try {
-                    mListAdapter.clear();
+                    mProgressDialog.setTitle("Loading Your Schedule.........");
                     JSONArray records = result.asJSONObject().getJSONArray("records");
+                    List<String> contactIds = new ArrayList<String>();
                     for (int i = 0; i < records.length(); i++) {
-                        mListAdapter.add(records.getJSONObject(i).getString("Name"));
+                        JSONObject json = records.getJSONObject(i);
+                        contactIds.add(json.getString("WhoId"));
+                        mListAdapter.add(json.getString("StartDateTime") + json.getString("WhoId"));
                     }
-                } catch (Exception e) {
+                    fetchContact(contactIds);
+                } catch (JSONException e) {
+                    onError(e);
+                } catch (IOException e) {
                     onError(e);
                 }
             }
 
             @Override
             public void onError(Exception exception) {
-                Toast.makeText(MainActivity.this,
-                        MainActivity.this.getString(SalesforceSDKManager.getInstance().getSalesforceR().stringGenericError(), exception.toString()),
-                        Toast.LENGTH_LONG).show();
+                showErrorToast(exception);
             }
         });
+    }
+
+    private void fetchContact(List<String> contactIds) {
+        // TODO
+        mProgressDialog.dismiss();
+    }
+
+    private RestRequest getRequestForQuery(String query) {
+        try {
+            return RestRequest.getRequestForQuery(getString(R.string.api_version), query);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showErrorToast(Exception exception) {
+        String errorString = getString(SalesforceSDKManager.getInstance().getSalesforceR().stringGenericError(), exception.toString());
+        Toast.makeText(MainActivity.this,
+                errorString,
+                Toast.LENGTH_LONG).show();
+        Log.e("NiceToMeetYou", errorString);
     }
 }
