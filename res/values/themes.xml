@@ -7,7 +7,7 @@
 
 <style name="N2MUActionBar"
     parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
-    <item name="android:background">#45A3A1</item>
+    <item name="android:background">@color/baseColor</item>
     <item name="android:titleTextStyle">@style/N2MUActionBar.Text</item>
 </style>
 
