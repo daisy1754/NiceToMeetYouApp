@@ -49,99 +49,74 @@ import com.salesforce.androidsdk.ui.sfnative.SalesforceActivity;
  */
 public class MainActivity extends SalesforceActivity {
 
-    private RestClient client;
-    private ArrayAdapter<String> listAdapter;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    private RestClient mClient;
+    private ArrayAdapter<String> mListAdapter;
 
-		// Setup view
-		setContentView(R.layout.main);
-	}
-	
-	@Override 
-	public void onResume() {
-		// Hide everything until we are logged in
-		findViewById(R.id.root).setVisibility(View.INVISIBLE);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+    }
+    
+    @Override 
+    public void onResume() {
+        findViewById(R.id.root).setVisibility(View.INVISIBLE);
 
-		// Create list adapter
-		listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
-		((ListView) findViewById(R.id.contacts_list)).setAdapter(listAdapter);				
-		
-		super.onResume();
-	}		
-	
-	@Override
-	public void onResume(RestClient client) {
-        // Keeping reference to rest client
-        this.client = client; 
+        mListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
+        ((ListView) findViewById(R.id.contacts_list)).setAdapter(mListAdapter);
+        
+        super.onResume();
+    }        
 
-		// Show everything
-		findViewById(R.id.root).setVisibility(View.VISIBLE);
-	}
+    @Override
+    public void onResume(RestClient client) {
+        mClient = client;
+        findViewById(R.id.root).setVisibility(View.VISIBLE);
+    }
 
-	/**
-	 * Called when "Logout" button is clicked. 
-	 * 
-	 * @param v
-	 */
-	public void onLogoutClick(View v) {
-		SalesforceSDKManager.getInstance().logout(this);
-	}
-	
-	/**
-	 * Called when "Clear" button is clicked. 
-	 * 
-	 * @param v
-	 */
-	public void onClearClick(View v) {
-		listAdapter.clear();
-	}	
-
-	/**
-	 * Called when "Fetch Contacts" button is clicked
-	 * 
-	 * @param v
-	 * @throws UnsupportedEncodingException 
-	 */
-	public void onFetchContactsClick(View v) throws UnsupportedEncodingException {
+    /**
+     * Called when "Fetch Contacts" button is clicked
+     * 
+     * @param v
+     * @throws UnsupportedEncodingException 
+     */
+    public void onFetchContactsClick(View v) throws UnsupportedEncodingException {
         sendRequest("SELECT Name FROM Contact");
-	}
+    }
 
-	/**
-	 * Called when "Fetch Accounts" button is clicked
-	 * 
-	 * @param v
-	 * @throws UnsupportedEncodingException 
-	 */
-	public void onFetchAccountsClick(View v) throws UnsupportedEncodingException {
-		sendRequest("SELECT Name FROM Account");
-	}	
-	
-	private void sendRequest(String soql) throws UnsupportedEncodingException {
-		RestRequest restRequest = RestRequest.getRequestForQuery(getString(R.string.api_version), soql);
+    /**
+     * Called when "Fetch Accounts" button is clicked
+     * 
+     * @param v
+     * @throws UnsupportedEncodingException 
+     */
+    public void onFetchAccountsClick(View v) throws UnsupportedEncodingException {
+        sendRequest("SELECT Name FROM Account");
+    }    
+    
+    private void sendRequest(String soql) throws UnsupportedEncodingException {
+        RestRequest restRequest = RestRequest.getRequestForQuery(getString(R.string.api_version), soql);
 
-		client.sendAsync(restRequest, new AsyncRequestCallback() {
-			@Override
-			public void onSuccess(RestRequest request, RestResponse result) {
-				try {
-					listAdapter.clear();
-					JSONArray records = result.asJSONObject().getJSONArray("records");
-					for (int i = 0; i < records.length(); i++) {
-						listAdapter.add(records.getJSONObject(i).getString("Name"));
-					}					
-				} catch (Exception e) {
-					onError(e);
-				}
-			}
-			
-			@Override
-			public void onError(Exception exception) {
+        mClient.sendAsync(restRequest, new AsyncRequestCallback() {
+            @Override
+            public void onSuccess(RestRequest request, RestResponse result) {
+                try {
+                    mListAdapter.clear();
+                    JSONArray records = result.asJSONObject().getJSONArray("records");
+                    for (int i = 0; i < records.length(); i++) {
+                        mListAdapter.add(records.getJSONObject(i).getString("Name"));
+                    }
+                } catch (Exception e) {
+                    onError(e);
+                }
+            }
+
+            @Override
+            public void onError(Exception exception) {
                 Toast.makeText(MainActivity.this,
-                               MainActivity.this.getString(SalesforceSDKManager.getInstance().getSalesforceR().stringGenericError(), exception.toString()),
-                               Toast.LENGTH_LONG).show();
-			}
-		});
-	}
+                        MainActivity.this.getString(SalesforceSDKManager.getInstance().getSalesforceR().stringGenericError(), exception.toString()),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }

@@ -36,8 +36,8 @@ import com.salesforce.androidsdk.security.Encryptor;
  */
 public class KeyImpl implements KeyInterface {
 
-	@Override
-	public String getKey(String name) {
-		return Encryptor.hash(name + "12s9adpahk;n12-97sdainkasd=012", name + "12kl0dsakj4-cxh1qewkjasdol8");
-	}
+    @Override
+    public String getKey(String name) {
+        return Encryptor.hash(name + "12s9adpahk;n12-97sdainkasd=012", name + "12kl0dsakj4-cxh1qewkjasdol8");
+    }
 }
