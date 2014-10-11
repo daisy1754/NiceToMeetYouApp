@@ -162,6 +162,7 @@ public class MainActivity extends SalesforceActivity {
                             startActivity(intent);
                         }
                     });
+                    contactList.setDivider(null);
                 } catch (JSONException e) {
                     onError(e);
                 } catch (IOException e) {
