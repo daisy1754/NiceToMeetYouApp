@@ -45,6 +45,9 @@ import com.squareup.picasso.Picasso;
  * Main activity
  */
 public class MainActivity extends SalesforceActivity {
+    // flag for debugging
+    boolean uiDebug = true;
+
     private static final String ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     private RestClient mClient;
     private ProgressDialog mProgressDialog;
@@ -84,7 +87,6 @@ public class MainActivity extends SalesforceActivity {
     }
 
     private void fetchIncomingEvent() {
-        boolean uiDebug = true;
         if (uiDebug) {
             ListView contactList = (ListView) findViewById(R.id.contacts_list);
             mDateToContactId = new HashMap<Date, List<String>>();
@@ -280,9 +282,13 @@ public class MainActivity extends SalesforceActivity {
                 ((TextView) convertView.findViewById(R.id.nameText)).setText(contactItem.getName());
                 ((TextView) convertView.findViewById(R.id.titleText)).setText(contactItem.getTitle());
                 if (contactItem.getUrl() != null) {
-                    final String url = mBaseUrl + contactItem.getUrl() + "?oauth_token=" + mClient.getAuthToken();
+                    String url = mBaseUrl + contactItem.getUrl() + "?oauth_token=" + mClient.getAuthToken();
+                    if (uiDebug) {
+                        url = contactItem.getUrl();
+                    }
                     final ImageView avatarImageView = (ImageView) convertView.findViewById(R.id.avatarImage);
                     Picasso.with(MainActivity.this).load(url).placeholder(R.drawable.hoge)
+                            .transform(new RoundTransformation())
                             .error(R.drawable.g2013).into(avatarImageView);
 
                 }
