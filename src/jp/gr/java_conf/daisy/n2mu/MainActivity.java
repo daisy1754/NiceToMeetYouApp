@@ -51,6 +51,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,7 @@ import com.salesforce.androidsdk.rest.RestClient.AsyncRequestCallback;
 import com.salesforce.androidsdk.rest.RestRequest;
 import com.salesforce.androidsdk.rest.RestResponse;
 import com.salesforce.androidsdk.ui.sfnative.SalesforceActivity;
+import com.squareup.picasso.Picasso;
 
 /**
  * Main activity
@@ -72,6 +74,7 @@ public class MainActivity extends SalesforceActivity {
     private Map<Date, List<String>> mDateToContactId;
     private Map<String, Contact> mIdToContact;
     private boolean mLoadingFired;
+    private String mBaseUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,7 @@ public class MainActivity extends SalesforceActivity {
     @Override
     public void onResume(RestClient client) {
         mClient = client;
+        mBaseUrl = mClient.getClientInfo().getInstanceUrlAsString();
         if (mLoadingFired) {
             return;
         }
@@ -245,15 +249,23 @@ public class MainActivity extends SalesforceActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position,  View convertView, ViewGroup parent) {
             Object item = getItem(position);
             if (mSectionHeader.contains(position)) {
                 convertView = new TextView(MainActivity.this);
                 ((TextView) convertView).setText(item.toString());
             } else {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.contact_list_item, null);
-                ((TextView) convertView.findViewById(R.id.nameText)).setText(((Contact) item).getName());
-                ((TextView) convertView.findViewById(R.id.titleText)).setText(((Contact) item).getTitle());
+                Contact contactItem = (Contact) item;
+                ((TextView) convertView.findViewById(R.id.nameText)).setText(contactItem.getName());
+                ((TextView) convertView.findViewById(R.id.titleText)).setText(contactItem.getTitle());
+                if (contactItem.getUrl() != null) {
+                    final String url = mBaseUrl + contactItem.getUrl() + "?oauth_token=" + mClient.getAuthToken();
+                    final ImageView avatarImageView = (ImageView) convertView.findViewById(R.id.avatarImage);
+                    Picasso.with(MainActivity.this).load(url).placeholder(R.drawable.hoge)
+                            .error(R.drawable.g2013).into(avatarImageView);
+
+                }
             }
             return convertView;
         }

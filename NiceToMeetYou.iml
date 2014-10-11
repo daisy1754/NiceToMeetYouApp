@@ -17,6 +17,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="SalesforceSDK" />
     <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="library" name="picasso-2.3.4" level="project" />
   </component>
 </module>
 
