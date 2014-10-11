@@ -67,6 +67,7 @@ public class MainActivity extends SalesforceActivity {
         mProgressDialog.show();
 
         setTitle("Upcoming Events");
+        getActionBar().setDisplayShowHomeEnabled(false);
     }
 
     @Override
@@ -290,7 +291,6 @@ public class MainActivity extends SalesforceActivity {
                     Picasso.with(MainActivity.this).load(url).placeholder(R.drawable.hoge)
                             .transform(new RoundTransformation())
                             .error(R.drawable.g2013).into(avatarImageView);
-
                 }
             }
             return convertView;
