@@ -63,7 +63,7 @@ public class MainActivity extends SalesforceActivity {
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setTitle("Loading Your Schedule...");
+        mProgressDialog.setMessage("Loading Your Schedule...");
         mProgressDialog.show();
 
         setTitle("Upcoming Events");
@@ -126,7 +126,7 @@ public class MainActivity extends SalesforceActivity {
             @Override
             public void onSuccess(RestRequest request, RestResponse result) {
                 try {
-                    mProgressDialog.setTitle("Loading Your Schedule.........");
+                    mProgressDialog.setMessage("Loading Your Schedule.........");
                     JSONArray records = result.asJSONObject().getJSONArray("records");
                     List<String> contactIds = new ArrayList<String>();
                     DateFormat dateFormat = new SimpleDateFormat(ISO_8601_FORMAT, Locale.getDefault());
