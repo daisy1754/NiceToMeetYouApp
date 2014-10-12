@@ -165,15 +165,17 @@ public class MainActivity extends SalesforceActivity {
             mIdToContact.put("4", new Contact("4", "Kent Suzuki", "Goooooogle", "https://s3.amazonaws.com/uifaces/faces/twitter/rssems/128.jpg"));
             mIdToContact.put("5", new Contact("5", "Nishida Ume", "UmaUma", "https://s3.amazonaws.com/uifaces/faces/twitter/sindresorhus/128.jpg"));
             updateContactTable();
-            contactList.setAdapter(
-                    new EventContactAdapter(MainActivity.this, mDateToContactId));
+            final EventContactAdapter adapter = new EventContactAdapter(MainActivity.this, mDateToContactId);
+            contactList.setAdapter(adapter);
             contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
-                    intent.putExtra(ContactDetailActivity.EXTRA_KEY_USER_ID, 1);
-                    startActivity(intent);
+                    Object item = adapter.getItem(position);
+                    if (item instanceof Contact) {
+                        Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
+                        intent.putExtra(ContactDetailActivity.EXTRA_KEY_USER_ID, ((Contact) item).getUserId());
+                        startActivity(intent);
+                    }
                 }
             });
             contactList.setDivider(null);

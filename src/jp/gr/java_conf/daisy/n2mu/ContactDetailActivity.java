@@ -45,7 +45,7 @@ public class ContactDetailActivity extends FragmentActivity {
         SQLiteDatabase db = new DBHelper(this).getReadableDatabase();
         mUserId = getIntent().getStringExtra(EXTRA_KEY_USER_ID);
         Cursor cursor = db.query("users",
-                new String[]{"forceUserId, name, iconUrl, company, linkedinId, twitterId, twitterScreenName"},
+                new String[]{"forceUserId, name, iconUrl, company, linkedInId, twitterId, twitterScreenName"},
                 "forceUserId=?", new String[]{mUserId}, null, null, null);
         if (cursor.moveToFirst()) {
             mName = cursor.getString(cursor.getColumnIndex("name"));
@@ -54,6 +54,13 @@ public class ContactDetailActivity extends FragmentActivity {
                     mName,
                     cursor.getString(cursor.getColumnIndex("company")));
 
+            // Ask for SNS Ids
+            String[] keys = new String[] {"linkedInId", "twitterScreenName"};
+            for (String key: keys) {
+                if (cursor.getString(cursor.getColumnIndex(key)) == null) {
+                    showTellMeDataDialog(key);
+                }
+            }
         }
 
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
@@ -70,6 +77,15 @@ public class ContactDetailActivity extends FragmentActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void initHeaderView(String iconUrl, String name, String company) {
+        final ImageView avatarImageView = (ImageView) findViewById(R.id.avatarImage);
+        Picasso.with(this).load(iconUrl).placeholder(R.drawable.hoge)
+                .transform(new RoundTransformation())
+                .error(R.drawable.g2013).into(avatarImageView);
+        ((TextView) findViewById(R.id.nameText)).setText(name);
+        ((TextView) findViewById(R.id.titleText)).setText(company);
     }
 
     private class ContactInfoAdapter extends FragmentPagerAdapter {
@@ -109,5 +125,27 @@ public class ContactDetailActivity extends FragmentActivity {
                 notifyDataSetChanged();
             }
         }
+    }
+
+    // TODO: implement search functionality
+    // Note: We cannot implement search for linkedin at this moment because I need get approved,
+    // I applied, but they said approval process takes 15 days.
+    private void showTellMeDataDialog(final String key) {
+        final EditText input = new EditText(this);
+        new AlertDialog.Builder(this)
+                .setTitle("Please tell me " + key + " of " + mName)
+                .setView(input)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String value = input.getText().toString();
+                        if (value.length() > 0) {
+                            SQLiteDatabase db = DBHelper.getWritableDatabase(ContactDetailActivity.this);
+                            ContentValues values = new ContentValues();
+                            values.put(key, value);
+                            db.update("users", values, "forceUserId=?", new String[] {mUserId});
+                            Toast.makeText(ContactDetailActivity.this, key + " is updated", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).show();
     }
 }
