@@ -24,7 +24,6 @@ public class ContactDetailActivity extends FragmentActivity {
         setContentView(R.layout.activity_contact_detail);
 
         getActionBar().setDisplayShowHomeEnabled(false);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle("Profile");
 
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
