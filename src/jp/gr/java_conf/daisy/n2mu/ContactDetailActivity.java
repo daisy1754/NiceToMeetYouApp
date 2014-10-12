@@ -51,23 +51,23 @@ public class ContactDetailActivity extends FragmentActivity {
                     mName,
                     cursor.getString(cursor.getColumnIndex("company")));
 
-            // Ask for SNS Ids
-            String[] keys = new String[] {"linkedInId", "twitterScreenName"};
-            for (String key: keys) {
-                if (cursor.getString(cursor.getColumnIndex(key)) == null) {
-                    showTellMeDataDialog(key);
-                }
-            }
-
-            String linkedinId = cursor.getString(cursor.getColumnIndex("linkedInId"));
-            if (cursor.getInt(cursor.getColumnIndex("gotKeywordFromLinkedIn")) <= 0 && linkedinId != null) {
-                mKeywordHelper.fetchKeywordWithLinkedInId(linkedinId, new KeywordHelper.OnKeywordObtainedListener() {
-                    @Override
-                    public void keywordObtained(Set<String> keywords) {
-                        
-                    }
-                });
-            }
+//            // Ask for SNS Ids
+//            String[] keys = new String[] {"linkedInId", "twitterScreenName"};
+//            for (String key: keys) {
+//                if (cursor.getString(cursor.getColumnIndex(key)) == null) {
+//                    showTellMeDataDialog(key);
+//                }
+//            }
+//
+//            String linkedinId = cursor.getString(cursor.getColumnIndex("linkedInId"));
+//            if (cursor.getInt(cursor.getColumnIndex("gotKeywordFromLinkedIn")) <= 0 && linkedinId != null) {
+//                mKeywordHelper.fetchKeywordWithLinkedInId(linkedinId, new KeywordHelper.OnKeywordObtainedListener() {
+//                    @Override
+//                    public void keywordObtained(Set<String> keywords) {
+//
+//                    }
+//                });
+//            }
         }
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
         pager.setAdapter(new ContactInfoAdapter(getSupportFragmentManager()));
@@ -112,9 +112,11 @@ public class ContactDetailActivity extends FragmentActivity {
             if (position == 0) {
                 return new ContactSummaryFragment();
             } else if (position == 1) {
-                return WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_LINKEDIN);
+                WebViewFragment fragment =  WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_LINKEDIN, mUserId);
+                fragment.loadUrl("https://www.linkedin.com/pub/wilson-assis-o-hora/4/718/4ab");
+                return fragment;
             } else if (position == 2) {
-                return WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_TWITTER);
+                return WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_TWITTER, mUserId);
             } else {
                 throw new IllegalStateException("Unknown tab position");
             }

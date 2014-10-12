@@ -50,7 +50,7 @@
             android:theme="@style/Theme.N2mu">
         </activity>
 	</application>
-	<uses-sdk android:minSdkVersion="14" />
+	<uses-sdk android:minSdkVersion="19" />
     <!--
         GCM permission to ensure that only this application can
         receive the messages and registration result. This must be of
