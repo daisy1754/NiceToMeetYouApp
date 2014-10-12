@@ -30,6 +30,8 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_n2mu</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_n2mu</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.N2mu</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
     <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
