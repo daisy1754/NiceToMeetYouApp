@@ -39,7 +39,15 @@ public class ContactDetailActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new ContactSummaryFragment();
+            if (position == 0) {
+                return new ContactSummaryFragment();
+            } else if (position == 1) {
+                return WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_LINKEDIN);
+            } else if (position == 2) {
+                return WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_TWITTER);
+            } else {
+                throw new IllegalStateException("Unknown tab position");
+            }
         }
 
         @Override
