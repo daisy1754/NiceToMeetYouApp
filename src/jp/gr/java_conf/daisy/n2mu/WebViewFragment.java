@@ -113,8 +113,10 @@ public class WebViewFragment extends Fragment {
         db.close();
 
         mWebView.evaluateJavascript("\n" +
+                "\n" +
                 "  var keywords = []\n" +
                 "  var endoses = document.querySelectorAll(\".endorse-item-name a\");\n" +
+                "  if (endoses.length == 0) {endoses = document.getElementsByClassName(\"profile-skill\")}\n" +
                 "  for (var i = 0; i < 3 && i < endoses.length; i++) {\n" +
                 "    var endose = endoses[i];\n" +
                 "    keywords.push(endose.innerText);\n" +
@@ -132,11 +134,22 @@ public class WebViewFragment extends Fragment {
                 "    var edu = educations[i];\n" +
                 "    keywords.push(edu.innerText);\n" +
                 "  }\n" +
+                "  if (educations.length == 0 && pastPositions.length == 0) {\n" +
+                "    cellTitles = document.getElementsByClassName(\"profile-cell-title\");\n" +
+                "    for (var i = 0; i < 10 && i < cellTitles.length; i++) {\n" +
+                "      var ctt = cellTitles[i];\n" +
+                "      keywords.push(ctt.innerText);\n" +
+                "    }\n" +
+                "  }\n" +
                 "  var interests = document.querySelectorAll(\"#interests li a\");\n" +
                 "  for (var i = 0; i < 6 && i < interests.length; i++) {\n" +
                 "    var int = interests[i];\n" +
                 "    keywords.push(int.innerText);\n" +
                 "  }\n" +
+                "  \n" +
+                "  \n" +
+                "\n" +
+                "  " +
                 "  keywords", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(final String text) {
