@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +41,20 @@ public class ContactSummaryFragment extends Fragment {
         view.findViewById(R.id.sendToWearable).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Not implemented :D", Toast.LENGTH_SHORT);
+                SQLiteDatabase db = new DBHelper(getActivity()).getReadableDatabase();
+                Cursor cursor = db.query("users", new String[]{"name"}, "forceUserId=?", new String[]{mUserId},
+                        null, null, null);
+                cursor.moveToFirst();
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                db.close();
+
+                // Simply sending notification for now.
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+                notificationManager.notify(001, new NotificationCompat.Builder(getActivity())
+                        .setContentTitle("Keywords of " +  name )
+                        .setContentText(mKeywordText)
+                        .setSmallIcon(R.drawable.sf__icon)
+                        .build());
             }
         });
         return view;
