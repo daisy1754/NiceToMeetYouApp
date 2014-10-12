@@ -24,6 +24,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -41,6 +44,8 @@ import com.salesforce.androidsdk.rest.RestResponse;
 import com.salesforce.androidsdk.ui.sfnative.SalesforceActivity;
 import com.squareup.picasso.Picasso;
 
+import jp.gr.java_conf.daisy.n2mu.debug.SQLDumpActivity;
+
 /**
  * Main activity
  */
@@ -48,6 +53,7 @@ public class MainActivity extends SalesforceActivity {
     // flag for debugging
     boolean uiDebug = true;
 
+    private static final int MENU_ITEM_SQL_DEBUG = 1;
     private static final String ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     private RestClient mClient;
     private ProgressDialog mProgressDialog;
@@ -85,6 +91,29 @@ public class MainActivity extends SalesforceActivity {
                 fetchIncomingEvent();
             }
         }, 1);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                // TODO:
+                Toast.makeText(this, "Not implemented yet :)", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_debug_sql:
+                Intent intent = new Intent(this, SQLDumpActivity.class);
+                startActivity(intent);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void fetchIncomingEvent() {
