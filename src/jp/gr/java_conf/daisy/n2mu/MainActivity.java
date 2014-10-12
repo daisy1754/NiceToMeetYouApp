@@ -53,14 +53,22 @@ public class MainActivity extends SalesforceActivity {
     // flag for debugging
     boolean uiDebug = true;
 
-    private static final int MENU_ITEM_SQL_DEBUG = 1;
     private static final String ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    private final int mMonth;
+    private final int mDay;
     private RestClient mClient;
     private ProgressDialog mProgressDialog;
     private Map<Date, List<String>> mDateToContactId;
     private Map<String, Contact> mIdToContact;
     private boolean mLoadingFired;
     private String mBaseUrl;
+
+    public MainActivity() {
+        super();
+        Date date = new Date();
+        mMonth = date.getMonth();
+        mDay = date.getDay();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -304,8 +312,19 @@ public class MainActivity extends SalesforceActivity {
         public View getView(int position,  View convertView, ViewGroup parent) {
             Object item = getItem(position);
             if (mSectionHeader.contains(position)) {
-                convertView = new TextView(MainActivity.this);
-                ((TextView) convertView).setText(item.toString());
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.contact_date_item, null);
+                Date date = (Date) item;
+                int month = date.getMonth();
+                int day = date.getDay();
+                String dateFormat;
+                if (month == mMonth && day == mDay) {
+                    dateFormat = "'Today, 'HH:mm";
+                } else if (month == mMonth && day == mDay + 1) { // TODO: I know, I need to deal with corner cases...
+                    dateFormat = "'Tomorrow, 'HH:mm";
+                } else {
+                    dateFormat = "MMM dd, HH:mm";
+                }
+                ((TextView) convertView).setText(new SimpleDateFormat(dateFormat).format(date));
             } else {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.contact_list_item, null);
                 Contact contactItem = (Contact) item;
