@@ -146,19 +146,19 @@ public class MainActivity extends SalesforceActivity {
             mDateToContactId = new HashMap<Date, List<String>>();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             try {
-                mDateToContactId.put(dateFormat.parse("2014-10-10 10:10"), Arrays.asList(new String[]{"1", "2", "3"}));
-                mDateToContactId.put(dateFormat.parse("2014-10-10 11:30"), Arrays.asList(new String[]{"1"}));
-                mDateToContactId.put(dateFormat.parse("2014-10-11 10:10"), Arrays.asList(new String[]{"4", "2"}));
-                mDateToContactId.put(dateFormat.parse("2014-10-10 8:10"), Arrays.asList(new String[]{"5"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-13 11:45"), Arrays.asList(new String[]{"1", "2", "3"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-12 10:30"), Arrays.asList(new String[]{"1"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-11 15:00"), Arrays.asList(new String[]{"4", "2"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-11 8:00"), Arrays.asList(new String[]{"5"}));
             } catch (ParseException e) {
 
             }
             mIdToContact = new HashMap<String, Contact>();
             mIdToContact.put("1", new Contact("Jon Smith", "ABC, inc", "https://s3.amazonaws.com/uifaces/faces/twitter/brad_frost/128.jpg"));
-            mIdToContact.put("2", new Contact("Make Nish", "Salesforce", "https://s3.amazonaws.com/uifaces/faces/twitter/c_southam/128.jpg"));
-            mIdToContact.put("3", new Contact("Amanda Lee", "Hitachi", "https://s3.amazonaws.com/uifaces/faces/twitter/adellecharles/128.jpg"));
-            mIdToContact.put("4", new Contact("Kent Suzuki", "UBC, inc", "https://s3.amazonaws.com/uifaces/faces/twitter/rssems/128.jpg"));
-            mIdToContact.put("5", new Contact("Nishida Ume", "OPP, inc", "https://s3.amazonaws.com/uifaces/faces/twitter/sindresorhus/128.jpg"));
+            mIdToContact.put("2", new Contact("Make Nish", "Sales and force", "https://s3.amazonaws.com/uifaces/faces/twitter/c_southam/128.jpg"));
+            mIdToContact.put("3", new Contact("Amanda Lee", "Hidetachi", "https://s3.amazonaws.com/uifaces/faces/twitter/adellecharles/128.jpg"));
+            mIdToContact.put("4", new Contact("Kent Suzuki", "Goooooogle", "https://s3.amazonaws.com/uifaces/faces/twitter/rssems/128.jpg"));
+            mIdToContact.put("5", new Contact("Nishida Ume", "UmaUma", "https://s3.amazonaws.com/uifaces/faces/twitter/sindresorhus/128.jpg"));
             contactList.setAdapter(
                     new EventContactAdapter(MainActivity.this, mDateToContactId));
             contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
