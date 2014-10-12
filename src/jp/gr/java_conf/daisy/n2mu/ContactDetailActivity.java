@@ -136,7 +136,7 @@ public class ContactDetailActivity extends FragmentActivity {
     // I applied, but they said approval process takes 15 days.
     private void showTellMeDataDialog(final String key) {
         final EditText input = new EditText(this);
-        new AlertDialog.Builder(this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Please tell me " + key + " of " + mName)
                 .setView(input)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -150,6 +150,13 @@ public class ContactDetailActivity extends FragmentActivity {
                             Toast.makeText(ContactDetailActivity.this, key + " is updated", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }).show();
+                });
+        if (key.equals("linkedInId")) {
+            builder.setMessage("Note: linkedInId is trickey one. For API call, we have to use diffrent Id than" +
+                    "that is shown on linkedIn web page or url. So, you should wait until linkedin " +
+                    "team allow me to implement search");
+        }
+
+        builder.show();
     }
 }
