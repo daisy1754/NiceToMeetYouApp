@@ -38,6 +38,10 @@ public class ContactSummaryFragment extends Fragment {
         mUserId = userId;
     }
 
+    public void setTwitterScreenName(String twitterScreenName) {
+        mTwitterScreenName = twitterScreenName;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -75,7 +79,7 @@ public class ContactSummaryFragment extends Fragment {
                         .build());
             }
         });
-        loadTwitterImages(view, "JakeQuickenden");
+        loadTwitterImages(view, mTwitterScreenName);
         return view;
     }
 

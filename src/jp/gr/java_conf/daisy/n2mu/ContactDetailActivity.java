@@ -38,6 +38,8 @@ public class ContactDetailActivity extends FragmentActivity {
     private KeywordHelper mKeywordHelper;
     private String mUserId;
     private String mName;
+    private String mTwitterScreenName;
+    private String mLinkedInUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class ContactDetailActivity extends FragmentActivity {
         SQLiteDatabase db = new DBHelper(this).getReadableDatabase();
         mUserId = getIntent().getStringExtra(EXTRA_KEY_USER_ID);
         Cursor cursor = db.query("users",
-                new String[]{"forceUserId, name, iconUrl, company, linkedInId, twitterId, twitterScreenName, gotKeywordFromLinkedIn, gotKeywordFromTwitter"},
+                new String[]{"forceUserId, name, iconUrl, company, linkedInId, twitterId, twitterScreenName, gotKeywordFromLinkedIn, gotKeywordFromTwitter,linkedInUrl"},
                 "forceUserId=?", new String[]{mUserId}, null, null, null);
         mKeywordHelper = new KeywordHelper(this);
         if (cursor.moveToFirst()) {
@@ -59,6 +61,9 @@ public class ContactDetailActivity extends FragmentActivity {
                     cursor.getString(cursor.getColumnIndex("iconUrl")),
                     mName,
                     cursor.getString(cursor.getColumnIndex("company")));
+
+            mTwitterScreenName = cursor.getString(cursor.getColumnIndex("twitterScreenName"));
+            mLinkedInUrl = cursor.getString(cursor.getColumnIndex("linkedInUrl"));
 
 //            // Ask for SNS Ids
 //            String[] keys = new String[] {"linkedInId", "twitterScreenName"};
@@ -123,14 +128,15 @@ public class ContactDetailActivity extends FragmentActivity {
             if (position == 0) {
                 ContactSummaryFragment fragment = new ContactSummaryFragment();
                 fragment.setUserId(mUserId);
+                fragment.setTwitterScreenName(mTwitterScreenName);
                 return fragment;
             } else if (position == 1) {
                 WebViewFragment fragment = WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_LINKEDIN, mUserId);
-                fragment.loadUrl("www.linkedin.com/pub/michael-pechuk/0/6b2/884");
+                fragment.loadUrl(mLinkedInUrl);
                 return fragment;
             } else if (position == 2) {
                 WebViewFragment fragment = WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_TWITTER, mUserId);
-                fragment.loadUrl("https://twitter.com/" + "ushikusamaru");
+                fragment.loadUrl("https://twitter.com/" + mTwitterScreenName);
                 return fragment;
             } else {
                 throw new IllegalStateException("Unknown tab position");
