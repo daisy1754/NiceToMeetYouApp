@@ -126,7 +126,7 @@ public class ContactDetailActivity extends FragmentActivity {
                 return fragment;
             } else if (position == 1) {
                 WebViewFragment fragment = WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_LINKEDIN, mUserId);
-                fragment.loadUrl("https://www.linkedin.com/pub/wilson-assis-o-hora/4/718/4ab");
+                fragment.loadUrl("www.linkedin.com/pub/michael-pechuk/0/6b2/884");
                 return fragment;
             } else if (position == 2) {
                 WebViewFragment fragment = WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_TWITTER, mUserId);
