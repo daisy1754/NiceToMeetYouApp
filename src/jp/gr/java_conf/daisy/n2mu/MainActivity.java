@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -186,10 +187,10 @@ public class MainActivity extends SalesforceActivity {
             mDateToContactId = new HashMap<Date, List<String>>();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             try {
-                mDateToContactId.put(dateFormat.parse("2014-10-13 11:45"), Arrays.asList(new String[]{"1", "2", "3"}));
-                mDateToContactId.put(dateFormat.parse("2014-10-12 10:30"), Arrays.asList(new String[]{"1"}));
-                mDateToContactId.put(dateFormat.parse("2014-10-11 15:00"), Arrays.asList(new String[]{"4", "2"}));
-                mDateToContactId.put(dateFormat.parse("2014-10-11 8:00"), Arrays.asList(new String[]{"5"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-14 11:45"), Arrays.asList(new String[]{"1", "2", "3"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-13 10:30"), Arrays.asList(new String[]{"1"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-12 15:00"), Arrays.asList(new String[]{"4", "2"}));
+                mDateToContactId.put(dateFormat.parse("2014-10-12 12:00"), Arrays.asList(new String[]{"5"}));
             } catch (ParseException e) {
 
             }
@@ -366,10 +367,13 @@ public class MainActivity extends SalesforceActivity {
 
         public EventContactAdapter(Context context, Map<Date, List<String>> dateToContactId) {
             super(context, R.layout.contact_list_item);
-            for (Map.Entry<Date, List<String>> entry: dateToContactId.entrySet()) {
+            List<Date> dates = new ArrayList<Date>(dateToContactId.keySet());
+            Collections.sort(dates);
+
+            for (int i = 0; i < dates.size(); i++) {
                 mSectionHeader.add(mDateAndContacts.size());
-                mDateAndContacts.add(entry.getKey());
-                for (String contactId: entry.getValue()) {
+                mDateAndContacts.add(dates.get(i));
+                for (String contactId: dateToContactId.get(dates.get(i))) {
                     mDateAndContacts.add(mIdToContact.get(contactId));
                 }
             }
