@@ -24,6 +24,7 @@ import org.w3c.dom.Text;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Webview for showing Linkedin/Twitter information
@@ -82,6 +83,7 @@ public class WebViewFragment extends Fragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                Log.d("webviewload", url + "|" + mWebView + "");
                 if (mWebView != null && mType == VIEW_TYPE_LINKEDIN) {
                     extractKeywordIfNecessary();
                 }
@@ -97,11 +99,14 @@ public class WebViewFragment extends Fragment {
     }
 
     private void extractKeywordIfNecessary() {
+        Log.d("webviewload1", "ok|" + mWebView + "");
         SQLiteDatabase db = new DBHelper(getActivity()).getReadableDatabase();
         Cursor cursor = db.query("users", new String[]{"gotKeywordFromLinkedIn"}, "forceUserId=?",
                 new String[]{mUserId}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getInt(cursor.getColumnIndex("gotKeywordFromLinkedIn")) == 1) {
+
+            Log.d("webviewload2", "ok|" + mWebView + "");
             db.close();
             return;
         }

@@ -248,9 +248,9 @@ public class MainActivity extends SalesforceActivity {
                         String twitterScreenName = "";
                         if (description != null) {
                             String[] arr = description.split("\n");
-                            if (arr.length > 1 && arr[0].split(":").length > 1 && arr[1].split(":").length > 1) {
-                                linkedinUrl = arr[0].split(":")[1].trim();
-                                twitterScreenName = arr[1].split(":")[1].trim();
+                            if (arr.length > 1 && arr[0].split(":", 2).length == 2&& arr[1].split(":", 2).length == 2) {
+                                linkedinUrl = arr[0].split(":", 2)[1].trim();
+                                twitterScreenName = arr[1].split(":", 2)[1].trim();
                             }
                         }
 
