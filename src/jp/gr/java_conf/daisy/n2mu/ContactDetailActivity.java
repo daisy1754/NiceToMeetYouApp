@@ -12,9 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,13 +21,10 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.TabPageIndicator;
-import com.viewpagerindicator.TitlePageIndicator;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class ContactDetailActivity extends FragmentActivity {
     public static final String EXTRA_KEY_USER_ID = "contactDetail:extra:userId";
+    private KeywordHelper mKeywordHelper;
     private String mUserId;
     private String mName;
 
@@ -40,13 +35,13 @@ public class ContactDetailActivity extends FragmentActivity {
 
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setTitle("Profile");
-
         // Fetch user info from local DB
         SQLiteDatabase db = new DBHelper(this).getReadableDatabase();
         mUserId = getIntent().getStringExtra(EXTRA_KEY_USER_ID);
         Cursor cursor = db.query("users",
-                new String[]{"forceUserId, name, iconUrl, company, linkedInId, twitterId, twitterScreenName"},
+                new String[]{"forceUserId, name, iconUrl, company, linkedInId, twitterId, twitterScreenName, gotKeywordFromLinkedIn, gotKeywordFromTwitter"},
                 "forceUserId=?", new String[]{mUserId}, null, null, null);
+        mKeywordHelper = new KeywordHelper(this);
         if (cursor.moveToFirst()) {
             mName = cursor.getString(cursor.getColumnIndex("name"));
             initHeaderView(
@@ -61,8 +56,12 @@ public class ContactDetailActivity extends FragmentActivity {
                     showTellMeDataDialog(key);
                 }
             }
-        }
 
+            String linkedinId = cursor.getString(cursor.getColumnIndex("linkedInId"));
+            if (cursor.getInt(cursor.getColumnIndex("gotKeywordFromLinkedIn")) <= 0 && linkedinId != null) {
+                mKeywordHelper.fetchKeywordWithLinkedInId(linkedinId);
+            }
+        }
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
         pager.setAdapter(new ContactInfoAdapter(getSupportFragmentManager()));
         TabPageIndicator tabIndicator = (TabPageIndicator)findViewById(R.id.titles);
@@ -77,6 +76,11 @@ public class ContactDetailActivity extends FragmentActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     private void initHeaderView(String iconUrl, String name, String company) {

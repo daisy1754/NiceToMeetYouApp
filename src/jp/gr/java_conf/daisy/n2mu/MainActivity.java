@@ -140,6 +140,11 @@ public class MainActivity extends SalesforceActivity {
                 startActivity(intent);
                 return true;
             }
+            case R.id.action_debug_linkedinAuth: {
+                Intent intent = new Intent(this, AuthWithLinkedinActivity.class);
+                startActivityForResult(intent, 0);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
