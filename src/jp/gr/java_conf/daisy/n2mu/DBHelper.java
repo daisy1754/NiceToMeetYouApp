@@ -47,6 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion == 1) {
             db.execSQL("ALTER TABLE users ADD COLUMN company text;");
+            db.execSQL("ALTER TABLE users ADD COLUMN name text;");
         }
     }
 }

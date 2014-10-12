@@ -9,17 +9,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -159,6 +164,7 @@ public class MainActivity extends SalesforceActivity {
             mIdToContact.put("3", new Contact("Amanda Lee", "Hidetachi", "https://s3.amazonaws.com/uifaces/faces/twitter/adellecharles/128.jpg"));
             mIdToContact.put("4", new Contact("Kent Suzuki", "Goooooogle", "https://s3.amazonaws.com/uifaces/faces/twitter/rssems/128.jpg"));
             mIdToContact.put("5", new Contact("Nishida Ume", "UmaUma", "https://s3.amazonaws.com/uifaces/faces/twitter/sindresorhus/128.jpg"));
+            updateContactTable();
             contactList.setAdapter(
                     new EventContactAdapter(MainActivity.this, mDateToContactId));
             contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -240,6 +246,7 @@ public class MainActivity extends SalesforceActivity {
                                         contact.get("Title") == null ? "" : contact.getString("Title"),
                                         contact.getString("PhotoUrl")));
                     }
+                    updateContactTable();
                     mProgressDialog.dismiss();
                     ListView contactList = (ListView) findViewById(R.id.contacts_list);
                     contactList.setAdapter(
@@ -264,6 +271,31 @@ public class MainActivity extends SalesforceActivity {
                 showErrorToast(exception);
             }
         });
+    }
+
+    private void updateContactTable() {
+        SQLiteDatabase db = DBHelper.getWritableDatabase(this);
+        Set<String> userIds = new HashSet<String>(mIdToContact.keySet());
+        String query = "forceUserId IN (?";
+        for (int i = 1; i < userIds.size(); i++) {
+            query += ",?";
+        }
+        query += ")";
+        Cursor cursor = db.query("users", new String[]{"forceUserId"}, query, userIds.toArray(new String[0]), null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                userIds.remove(cursor.getString(cursor.getColumnIndex("forceUserId")));
+            } while (cursor.moveToNext());
+        }
+        for (String userId: userIds) {
+            ContentValues values = new ContentValues();
+            values.put("forceUserId", userId);
+            Contact contact = mIdToContact.get(userId);
+            values.put("iconUrl", contact.getUrl());
+            values.put("name", contact.getName());
+            values.put("company", contact.getTitle());
+            db.insert("users", "", values);
+        }
     }
 
     private RestRequest getRequestForQuery(String query) {
