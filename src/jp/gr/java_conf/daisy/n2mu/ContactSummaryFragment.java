@@ -75,7 +75,7 @@ public class ContactSummaryFragment extends Fragment {
                         .build());
             }
         });
-        loadTwitterImages(view, "daisy");
+        loadTwitterImages(view, "JakeQuickenden");
         return view;
     }
 
@@ -103,9 +103,9 @@ public class ContactSummaryFragment extends Fragment {
                             urls.add(entity.getMediaURL());
                         }
                     }
-
                 } catch (TwitterException e) {
                     // TODO
+                    return urls;
                 }
                 return urls;
             }

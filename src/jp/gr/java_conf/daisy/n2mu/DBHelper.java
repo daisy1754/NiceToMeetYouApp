@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
     public DBHelper(Context context) {
         super(context, "n2mu.db", null, VERSION);
     }
@@ -52,6 +52,9 @@ public class DBHelper extends SQLiteOpenHelper {
         if (oldVersion <= 2) {
             db.execSQL("ALTER TABLE users ADD COLUMN gotKeywordFromLinkedIn integer;");
             db.execSQL("ALTER TABLE users ADD COLUMN gotKeywordFromTwitter integer;");
+        }
+        if (oldVersion <= 3) {
+            db.execSQL("ALTER TABLE users ADD COLUMN linkedInUrl text;");
         }
     }
 }

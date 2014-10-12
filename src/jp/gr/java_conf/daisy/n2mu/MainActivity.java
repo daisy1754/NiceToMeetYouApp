@@ -182,43 +182,6 @@ public class MainActivity extends SalesforceActivity {
     }
 
     private void fetchIncomingEvent() {
-        if (uiDebug) {
-            ListView contactList = (ListView) findViewById(R.id.contacts_list);
-            mDateToContactId = new HashMap<Date, List<String>>();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-            try {
-                mDateToContactId.put(dateFormat.parse("2014-10-14 11:45"), Arrays.asList(new String[]{"1", "2", "3"}));
-                mDateToContactId.put(dateFormat.parse("2014-10-13 10:30"), Arrays.asList(new String[]{"1"}));
-                mDateToContactId.put(dateFormat.parse("2014-10-12 15:00"), Arrays.asList(new String[]{"4", "2"}));
-                mDateToContactId.put(dateFormat.parse("2014-10-12 12:00"), Arrays.asList(new String[]{"5"}));
-            } catch (ParseException e) {
-
-            }
-            mIdToContact = new HashMap<String, Contact>();
-            mIdToContact.put("1", new Contact("1", "Jon Smith", "ABC, inc", "https://s3.amazonaws.com/uifaces/faces/twitter/brad_frost/128.jpg"));
-            mIdToContact.put("2", new Contact("2", "Make Nish", "Sales and force", "https://s3.amazonaws.com/uifaces/faces/twitter/c_southam/128.jpg"));
-            mIdToContact.put("3", new Contact("3", "Amanda Lee", "Hidetachi", "https://s3.amazonaws.com/uifaces/faces/twitter/adellecharles/128.jpg"));
-            mIdToContact.put("4", new Contact("4", "Kent Suzuki", "Goooooogle", "https://s3.amazonaws.com/uifaces/faces/twitter/rssems/128.jpg"));
-            mIdToContact.put("5", new Contact("5", "Nishida Ume", "UmaUma", "https://s3.amazonaws.com/uifaces/faces/twitter/sindresorhus/128.jpg"));
-            updateContactTable();
-            final EventContactAdapter adapter = new EventContactAdapter(MainActivity.this, mDateToContactId);
-            contactList.setAdapter(adapter);
-            contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Object item = adapter.getItem(position);
-                    if (item instanceof Contact) {
-                        Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
-                        intent.putExtra(ContactDetailActivity.EXTRA_KEY_USER_ID, ((Contact) item).getUserId());
-                        startActivity(intent);
-                    }
-                }
-            });
-            contactList.setDivider(null);
-            mProgressDialog.hide();
-            return;
-        }
-
         RestRequest restRequest
                 = getRequestForQuery("SELECT StartDateTime, WhoId FROM Event Where StartDateTime >= TODAY");
         mClient.sendAsync(restRequest, new AsyncRequestCallback() {
@@ -262,7 +225,7 @@ public class MainActivity extends SalesforceActivity {
 
     private void fetchContact(final List<String> contactIds) {
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT Id,Name,Title,Department,PhotoUrl FROM Contact Where Id IN (");
+        queryBuilder.append("SELECT Id,Name,Title,Department,PhotoUrl,Description FROM Contact Where Id IN (");
         for (int i = 0; i < contactIds.size(); i++) {
             queryBuilder.append("'").append(contactIds.get(i)).append("'");
             if (i != contactIds.size() - 1) {
@@ -280,12 +243,25 @@ public class MainActivity extends SalesforceActivity {
                     mIdToContact = new HashMap<String, Contact>();
                     for (int i = 0; i < records.length(); i++) {
                         JSONObject contact = records.getJSONObject(i);
+                        String description = contact.getString("Description");
+                        String linkedinUrl = "";
+                        String twitterScreenName = "";
+                        if (description != null) {
+                            String[] arr = description.split("\n");
+                            if (arr.length > 1 && arr[0].split(":").length > 1 && arr[1].split(":").length > 1) {
+                                linkedinUrl = arr[0].split(":")[1].trim();
+                                twitterScreenName = arr[1].split(":")[1].trim();
+                            }
+                        }
+
                         mIdToContact.put(contact.getString("Id"),
                                 new Contact(
                                         contact.getString("Id"),
                                         contact.getString("Name"),
                                         contact.get("Title") == null ? "" : contact.getString("Title"),
-                                        contact.getString("PhotoUrl")));
+                                        contact.getString("PhotoUrl"),
+                                        linkedinUrl,
+                                        twitterScreenName));
                     }
                     updateContactTable();
                     mProgressDialog.dismiss();
@@ -339,6 +315,8 @@ public class MainActivity extends SalesforceActivity {
             values.put("iconUrl", contact.getUrl());
             values.put("name", contact.getName());
             values.put("company", contact.getTitle());
+            values.put("linkedInUrl", contact.getLinkedInUrl());
+            values.put("twitterScreenName", contact.getTwitterScreenName());
             db.insert("users", "", values);
         }
     }
@@ -446,12 +424,16 @@ public class MainActivity extends SalesforceActivity {
         private final String mName;
         private final String mTitle;
         private final String mUrl;
+        private final String mLinkedInUrl;
+        private final String mTwitterScreenName;
 
-        public Contact(String userId, String name, String title, String url) {
+        public Contact(String userId, String name, String title, String url, String linkedInUrl, String twitterScreenName) {
             mUserId = userId;
             mName = name;
             mTitle = title.equals("null") ? "" : title;
             mUrl = (url != null && url.equals("null")) ? null : url;
+            mLinkedInUrl = linkedInUrl;
+            mTwitterScreenName = twitterScreenName;
         }
 
         public String getUserId() {
@@ -468,6 +450,14 @@ public class MainActivity extends SalesforceActivity {
 
         public String getUrl() {
             return mUrl;
+        }
+
+        public String getLinkedInUrl() {
+            return mLinkedInUrl;
+        }
+
+        public String getTwitterScreenName() {
+            return mTwitterScreenName;
         }
     }
 }
