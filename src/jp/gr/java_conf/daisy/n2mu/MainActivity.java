@@ -44,6 +44,7 @@ import com.salesforce.androidsdk.rest.RestResponse;
 import com.salesforce.androidsdk.ui.sfnative.SalesforceActivity;
 import com.squareup.picasso.Picasso;
 
+import jp.gr.java_conf.daisy.n2mu.debug.PrefDumpActivity;
 import jp.gr.java_conf.daisy.n2mu.debug.SQLDumpActivity;
 import jp.gr.java_conf.daisy.n2mu.setup.AuthWithLinkedinActivity;
 
@@ -124,9 +125,16 @@ public class MainActivity extends SalesforceActivity {
                 // TODO:
                 Toast.makeText(this, "Not implemented yet :)", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.action_debug_sql:
+            case R.id.action_debug_sql: {
                 Intent intent = new Intent(this, SQLDumpActivity.class);
                 startActivity(intent);
+                return true;
+            }
+            case R.id.action_debug_sharedpref: {
+                Intent intent = new Intent(this, PrefDumpActivity.class);
+                startActivity(intent);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
