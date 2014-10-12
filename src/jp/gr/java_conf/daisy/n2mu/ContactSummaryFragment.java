@@ -1,6 +1,7 @@
 package jp.gr.java_conf.daisy.n2mu;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,8 +20,8 @@ public class ContactSummaryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact_summary, container, false);
-        Cursor cursor = new DBHelper(getActivity()).getReadableDatabase()
-                .query("keywords", new String[]{"keyword"}, "userId=?", new String[]{mUserId}, null, null, null);
+        SQLiteDatabase db = new DBHelper(getActivity()).getReadableDatabase();
+        Cursor cursor = db.query("keywords", new String[]{"keyword"}, "userId=?", new String[]{mUserId}, null, null, null);
         if (cursor.moveToFirst()) {
             StringBuilder builder = new StringBuilder();
             do {
@@ -31,6 +32,7 @@ public class ContactSummaryFragment extends Fragment {
             } while (cursor.moveToNext());
             ((TextView) view.findViewById(R.id.keywordTexts)).setText(builder.toString());
         }
+        db.close();
         return view;
     }
 }

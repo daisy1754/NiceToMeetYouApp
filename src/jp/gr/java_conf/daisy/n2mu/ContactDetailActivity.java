@@ -69,6 +69,8 @@ public class ContactDetailActivity extends FragmentActivity {
 //                });
 //            }
         }
+        db.close();
+
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
         pager.setAdapter(new ContactInfoAdapter(getSupportFragmentManager()));
         TabPageIndicator tabIndicator = (TabPageIndicator)findViewById(R.id.titles);
@@ -159,6 +161,7 @@ public class ContactDetailActivity extends FragmentActivity {
                             values.put(key, value);
                             db.update("users", values, "forceUserId=?", new String[]{mUserId});
                             Toast.makeText(ContactDetailActivity.this, key + " is updated", Toast.LENGTH_SHORT).show();
+                            db.close();
                         }
                     }
                 });

@@ -96,8 +96,10 @@ public class WebViewFragment extends Fragment {
                 new String[]{mUserId}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getInt(cursor.getColumnIndex("gotKeywordFromLinkedIn")) == 1) {
+            db.close();
             return;
         }
+        db.close();
 
         mWebView.evaluateJavascript("\n" +
                 "  var keywords = []\n" +
