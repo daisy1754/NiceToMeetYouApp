@@ -1,6 +1,7 @@
 package jp.gr.java_conf.daisy.n2mu;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -27,6 +29,16 @@ public class ContactDetailActivity extends FragmentActivity {
         pager.setAdapter(new ContactInfoAdapter(getSupportFragmentManager()));
         TabPageIndicator tabIndicator = (TabPageIndicator)findViewById(R.id.titles);
         tabIndicator.setViewPager(pager);
+
+        ImageView fab = (ImageView) findViewById(R.id.postReportButton);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: apply effect to fab
+                Intent intent = new Intent(ContactDetailActivity.this, NewReportActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private class ContactInfoAdapter extends FragmentPagerAdapter {
