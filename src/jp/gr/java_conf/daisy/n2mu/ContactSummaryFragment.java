@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,7 @@ public class ContactSummaryFragment extends Fragment {
                         .build());
             }
         });
-        loadTwitterImages(view, "Visa");
+        loadTwitterImages(view, "daisy");
         return view;
     }
 
@@ -93,9 +94,9 @@ public class ContactSummaryFragment extends Fragment {
         new AsyncTask<Void, Void, List<String>>() {
             @Override
             protected List<String> doInBackground(Void... params) {
+                List<String> urls = new ArrayList<String>();
                 try {
                     List<twitter4j.Status> statuses = twitter.getUserTimeline(screenName);
-                    List<String> urls = new ArrayList<String>();
                     for (twitter4j.Status status: statuses) {
                         if (status.getMediaEntities().length > 0) {
                             MediaEntity entity = status.getMediaEntities()[0];
@@ -106,7 +107,7 @@ public class ContactSummaryFragment extends Fragment {
                 } catch (TwitterException e) {
                     // TODO
                 }
-                return null;
+                return urls;
             }
 
             @Override
@@ -115,7 +116,6 @@ public class ContactSummaryFragment extends Fragment {
                     int count = 0;
                     for (String url: urls) {
                         Picasso.with(getActivity()).load(url).placeholder(R.drawable.hoge)
-                                .transform(new RoundTransformation())
                                 .error(R.drawable.g2013).into((ImageView) parent.findViewById(imageViewId(count)));
                         count++;
                         if (count == 3) {
