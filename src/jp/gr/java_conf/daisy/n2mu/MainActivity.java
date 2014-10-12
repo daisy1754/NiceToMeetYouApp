@@ -19,9 +19,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,6 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -144,6 +147,27 @@ public class MainActivity extends SalesforceActivity {
                 Intent intent = new Intent(this, AuthWithLinkedinActivity.class);
                 startActivityForResult(intent, 0);
                 return true;
+            }
+            case R.id.action_debug_keywords_lookup_with_linkedin_id: {
+                final EditText input = new EditText(this);
+                new AlertDialog.Builder(this)
+                        .setTitle("Input linkedin Id (like '1x8UyU9s7Y')")
+                        .setView(input)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                String value = input.getText().toString();
+                                if (value.length() > 0) {
+                                    new KeywordHelper(MainActivity.this).fetchKeywordWithLinkedInId(value, new KeywordHelper.OnKeywordObtainedListener() {
+                                        @Override
+                                        public void keywordObtained(Set<String> keywords) {
+                                            new AlertDialog.Builder(MainActivity.this)
+                                                    .setMessage(keywords.toString())
+                                                    .show();
+                                        }
+                                    });
+                                }
+                            }
+                        }).show();
             }
             default:
                 return super.onOptionsItemSelected(item);

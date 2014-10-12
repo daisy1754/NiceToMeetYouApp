@@ -13,4 +13,7 @@
     <item android:id="@+id/action_debug_linkedinAuth"
         android:title="Debug Linkedin Auth"
         android:showAsAction="never" />
+    <item android:id="@+id/action_debug_keywords_lookup_with_linkedin_id"
+        android:title="Debug Check keywords for linkedin Id"
+        android:showAsAction="never" />
 </menu>
