@@ -82,12 +82,18 @@ public class WebViewFragment extends Fragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if (mType == VIEW_TYPE_LINKEDIN) {
+                if (mWebView != null && mType == VIEW_TYPE_LINKEDIN) {
                     extractKeywordIfNecessary();
                 }
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mWebView = null;
     }
 
     private void extractKeywordIfNecessary() {
@@ -180,6 +186,7 @@ public class WebViewFragment extends Fragment {
                 ContentValues values = new ContentValues();
                 values.put("gotKeywordFromLinkedIn", 1);
                 db.update("users", values, "forceUserId=?", new String[]{mUserId});
+                db.close();
             }
         });
     }
