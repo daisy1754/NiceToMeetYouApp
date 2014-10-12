@@ -117,11 +117,13 @@ public class ContactDetailActivity extends FragmentActivity {
                 fragment.setUserId(mUserId);
                 return fragment;
             } else if (position == 1) {
-                WebViewFragment fragment =  WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_LINKEDIN, mUserId);
+                WebViewFragment fragment = WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_LINKEDIN, mUserId);
                 fragment.loadUrl("https://www.linkedin.com/pub/wilson-assis-o-hora/4/718/4ab");
                 return fragment;
             } else if (position == 2) {
-                return WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_TWITTER, mUserId);
+                WebViewFragment fragment = WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_TWITTER, mUserId);
+                fragment.loadUrl("https://twitter.com/" + "ushikusamaru");
+                return fragment;
             } else {
                 throw new IllegalStateException("Unknown tab position");
             }
