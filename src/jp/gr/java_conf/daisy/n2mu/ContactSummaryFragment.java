@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ContactSummaryFragment extends Fragment {
     private String mUserId;
+    private String mKeywordText;
 
     public void setUserId(String userId) {
         mUserId = userId;
@@ -30,9 +32,16 @@ public class ContactSummaryFragment extends Fragment {
                     builder.append(string).append("      ");
                 }
             } while (cursor.moveToNext());
-            ((TextView) view.findViewById(R.id.keywordTexts)).setText(builder.toString());
+            mKeywordText = builder.toString();
+            ((TextView) view.findViewById(R.id.keywordTexts)).setText(mKeywordText);
         }
         db.close();
+        view.findViewById(R.id.sendToWearable).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Not implemented :D", Toast.LENGTH_SHORT);
+            }
+        });
         return view;
     }
 }

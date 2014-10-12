@@ -20,6 +20,19 @@
         android:textSize="24sp"
         android:paddingTop="8dp"
         android:lineSpacingExtra="4dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/sendToWearable"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_gravity="right"
+            android:background="@drawable/send_to_wear_button"
+            android:textColor="#444444"
+            android:text="Send to Android wear" />
+    </FrameLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
