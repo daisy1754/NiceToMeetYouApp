@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.TabPageIndicator;
 
+import java.util.Set;
+
 public class ContactDetailActivity extends FragmentActivity {
     public static final String EXTRA_KEY_USER_ID = "contactDetail:extra:userId";
     private KeywordHelper mKeywordHelper;
@@ -59,7 +61,12 @@ public class ContactDetailActivity extends FragmentActivity {
 
             String linkedinId = cursor.getString(cursor.getColumnIndex("linkedInId"));
             if (cursor.getInt(cursor.getColumnIndex("gotKeywordFromLinkedIn")) <= 0 && linkedinId != null) {
-                mKeywordHelper.fetchKeywordWithLinkedInId(linkedinId);
+                mKeywordHelper.fetchKeywordWithLinkedInId(linkedinId, new KeywordHelper.OnKeywordObtainedListener() {
+                    @Override
+                    public void keywordObtained(Set<String> keywords) {
+                        
+                    }
+                });
             }
         }
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
@@ -146,7 +153,7 @@ public class ContactDetailActivity extends FragmentActivity {
                             SQLiteDatabase db = DBHelper.getWritableDatabase(ContactDetailActivity.this);
                             ContentValues values = new ContentValues();
                             values.put(key, value);
-                            db.update("users", values, "forceUserId=?", new String[] {mUserId});
+                            db.update("users", values, "forceUserId=?", new String[]{mUserId});
                             Toast.makeText(ContactDetailActivity.this, key + " is updated", Toast.LENGTH_SHORT).show();
                         }
                     }
