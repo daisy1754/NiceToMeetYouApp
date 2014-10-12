@@ -2,3 +2,4 @@ include ':SalesforceSDK'
 project(':SalesforceSDK').projectDir = new File('salesforceSDK/sdk')
 include ':cordova'
 project(':cordova').projectDir = new File('salesforceSDK/external/cordova/framework')
+include ':libraries:ViewPagerIndicator:library'

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -49,59 +51,17 @@
                 </LinearLayout>
             </LinearLayout>
             <!-- Content -->
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp"
-                android:background="#FCFCFC"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/accentColor"
-                    android:textSize="16sp"
-                    android:text="KeyWords" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/darkColor"
-                    android:textSize="24sp"
-                    android:paddingTop="8dp"
-                    android:lineSpacingExtra="4dp"
-                    android:text="Stanford   Twitter   Data Scientist   Father   Evangelist   Techy" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/accentColor"
-                    android:textSize="16sp"
-                    android:paddingTop="16dp"
-                    android:text="Photos" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:textColor="@color/darkColor"
-                    android:textSize="24sp"
-                    android:paddingTop="8dp"
-                    android:layout_marginLeft="-16dp"
-                    android:layout_marginRight="-32dp"
-                    android:lineSpacingExtra="4dp"
-                    android:text="Photos come here" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/accentColor"
-                    android:textSize="16sp"
-                    android:paddingTop="16dp"
-                    android:text="Next meeting" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/darkColor"
-                    android:textSize="24sp"
-                    android:paddingTop="8dp"
-                    android:lineSpacingExtra="4dp"
-                    android:text="13pm today at Marcals Hogelacho St." />
-            </LinearLayout>
+             <com.viewpagerindicator.TabPageIndicator
+                android:id="@+id/titles"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent" />
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:background="#CDCDCD"
+                android:layout_width="fill_parent"
+                android:layout_height="500dp"
+                android:layout_weight="1"
+                />
         </LinearLayout>
     </ScrollView>
     <!-- Floating action button -->
