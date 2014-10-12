@@ -54,6 +54,13 @@
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_n2mu</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_n2mu</item>
         <item name="android:progressBarStyle">@style/ProgressBar.N2mu</item>
+        <item name="android:titleTextStyle">@style/TitleTextStyle.N2mu</item>
+    </style>
+
+    <style name="TitleTextStyle.N2mu" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ActionBar.Transparent.N2mu" parent="@android:style/Widget.Holo.Light.ActionBar">
