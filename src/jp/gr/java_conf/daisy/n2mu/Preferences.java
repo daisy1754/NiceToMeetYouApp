@@ -30,4 +30,6 @@ public class Preferences {
     public static final String KEY_LINKEDIN_ACCESS_TOKEN = "linkedinToken";
     public static final String KEY_LINKEDIN_ACCESS_TOKEN_SECRET = "linkedinTokenSecret";
     public static final String KEY_LINKEDIN_ACCESS_TOKEN_EXPIRES = "linkedinTokenExpires";
+    public static final String KEY_TWITTER_OAUTH_TOKEN = "oauth_token";
+    public static final String KEY_TWITTER_OAUTH_SECRET = "oauth_token_secret";
 }

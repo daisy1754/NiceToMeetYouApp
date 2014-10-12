@@ -40,12 +40,16 @@ android {
             props.load(new FileInputStream(file("auth.properties")))
             buildConfigField "String", "LINKEDIN_CONSUMER_KEY", props["linkedinConsumerKey"]
             buildConfigField "String", "LINKEDIN_CONSUMER_SECRET", props["linkedinConsumerSecret"]
+            buildConfigField "String", "TWITTER_CONSUMER_KEY", props["twitterConsumerKey"]
+            buildConfigField "String", "TWITTER_CONSUMER_SECRET", props["twitterConsumerSecret"]
         }
         release {
             Properties props = new Properties()
             props.load(new FileInputStream(file("auth.properties")))
             buildConfigField "String", "LINKEDIN_CONSUMER_KEY", props["linkedinConsumerKey"]
             buildConfigField "String", "LINKEDIN_CONSUMER_SECRET", props["linkedinConsumerSecret"]
+            buildConfigField "String", "TWITTER_CONSUMER_KEY", props["twitterConsumerKey"]
+            buildConfigField "String", "TWITTER_CONSUMER_SECRET", props["twitterConsumerSecret"]
         }
     }
 }
@@ -59,4 +63,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile project (':SalesforceSDK')
     compile 'com.squareup.picasso:picasso:2.3.4'
+    compile 'org.twitter4j:twitter4j-core:4.0.1'
+
 }

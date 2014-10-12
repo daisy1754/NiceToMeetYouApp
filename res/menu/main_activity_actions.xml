@@ -10,6 +10,9 @@
     <item android:id="@+id/action_debug_sharedpref"
         android:title="Debug Prefs"
         android:showAsAction="never" />
+    <item android:id="@+id/action_debug_twitter_auth"
+        android:title="Debug Twitter Auth"
+        android:showAsAction="never" />
     <item android:id="@+id/action_debug_linkedinAuth"
         android:title="Debug Linkedin Auth"
         android:showAsAction="never" />

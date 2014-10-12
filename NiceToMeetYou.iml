@@ -79,6 +79,7 @@
     <orderEntry type="library" exported="" name="picasso-2.3.4" level="project" />
     <orderEntry type="library" exported="" name="signpost-core-1.2.1.1" level="project" />
     <orderEntry type="library" exported="" name="linkedin-j-android" level="project" />
+    <orderEntry type="library" exported="" name="twitter4j-core-4.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-20.0.0" level="project" />
     <orderEntry type="module" module-name="library" exported="" />
     <orderEntry type="module" module-name="SalesforceSDK" exported="" />

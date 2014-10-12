@@ -55,6 +55,7 @@ import com.squareup.picasso.Picasso;
 import jp.gr.java_conf.daisy.n2mu.debug.PrefDumpActivity;
 import jp.gr.java_conf.daisy.n2mu.debug.SQLDumpActivity;
 import jp.gr.java_conf.daisy.n2mu.setup.AuthWithLinkedinActivity;
+import jp.gr.java_conf.daisy.n2mu.setup.TwitterAuthActivity;
 
 /**
  * Main activity
@@ -141,6 +142,11 @@ public class MainActivity extends SalesforceActivity {
             case R.id.action_debug_sharedpref: {
                 Intent intent = new Intent(this, PrefDumpActivity.class);
                 startActivity(intent);
+                return true;
+            }
+            case R.id.action_debug_twitter_auth: {
+                Intent intent = new Intent(this, TwitterAuthActivity.class);
+                startActivityForResult(intent, 0);
                 return true;
             }
             case R.id.action_debug_linkedinAuth: {
