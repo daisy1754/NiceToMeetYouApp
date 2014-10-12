@@ -110,7 +110,9 @@ public class ContactDetailActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new ContactSummaryFragment();
+                ContactSummaryFragment fragment = new ContactSummaryFragment();
+                fragment.setUserId(mUserId);
+                return fragment;
             } else if (position == 1) {
                 WebViewFragment fragment =  WebViewFragment.newInstance(WebViewFragment.VIEW_TYPE_LINKEDIN, mUserId);
                 fragment.loadUrl("https://www.linkedin.com/pub/wilson-assis-o-hora/4/718/4ab");
