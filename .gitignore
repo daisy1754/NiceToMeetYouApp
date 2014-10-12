@@ -6,3 +6,4 @@ build/
 .idea/
 salesforceSDK/
 libraries
+auth.properties

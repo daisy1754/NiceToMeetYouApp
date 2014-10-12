@@ -28,6 +28,18 @@
             android:theme="@style/Theme.N2mu">
         </activity>
 
+        <activity android:name=".setup.AuthWithLinkedinActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.N2mu"
+            android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="x-oauthflow-linkedin" android:host="callback" />
+            </intent-filter>
+        </activity>
+
         <!-- For debug TODO: create gradle flaver and enable only for debug build -->
         <activity android:name=".debug.SQLDumpActivity"
             android:label="@string/app_name"

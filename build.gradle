@@ -33,6 +33,21 @@ android {
     exclude 'META-INF/DEPENDENCIES'
     exclude 'META-INF/NOTICE'
   }
+    buildTypes {
+        debug {
+            // TODO: apperently we should different auth-keys!
+            Properties props = new Properties()
+            props.load(new FileInputStream(file("auth.properties")))
+            buildConfigField "String", "LINKEDIN_CONSUMER_KEY", props["linkedinConsumerKey"]
+            buildConfigField "String", "LINKEDIN_CONSUMER_SECRET", props["linkedinConsumerSecret"]
+        }
+        release {
+            Properties props = new Properties()
+            props.load(new FileInputStream(file("auth.properties")))
+            buildConfigField "String", "LINKEDIN_CONSUMER_KEY", props["linkedinConsumerKey"]
+            buildConfigField "String", "LINKEDIN_CONSUMER_SECRET", props["linkedinConsumerSecret"]
+        }
+    }
 }
 
 repositories {

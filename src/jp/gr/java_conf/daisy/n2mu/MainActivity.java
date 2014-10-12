@@ -45,6 +45,7 @@ import com.salesforce.androidsdk.ui.sfnative.SalesforceActivity;
 import com.squareup.picasso.Picasso;
 
 import jp.gr.java_conf.daisy.n2mu.debug.SQLDumpActivity;
+import jp.gr.java_conf.daisy.n2mu.setup.AuthWithLinkedinActivity;
 
 /**
  * Main activity
@@ -74,6 +75,13 @@ public class MainActivity extends SalesforceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        String linkedinToken = Preferences.getDefault(this).getString(Preferences.KEY_LINKEDIN_ACCESS_TOKEN, "");
+        if (linkedinToken.length() == 0) { // I don't have token
+            Intent intent = new Intent(this, AuthWithLinkedinActivity.class);
+            startActivityForResult(intent, 0);
+        }
+        // TODO: token expire check
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);
