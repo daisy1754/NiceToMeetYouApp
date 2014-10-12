@@ -2,6 +2,8 @@ package jp.gr.java_conf.daisy.n2mu;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
@@ -9,12 +11,27 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import twitter4j.MediaEntity;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class ContactSummaryFragment extends Fragment {
     private String mUserId;
     private String mKeywordText;
+    private String mTwitterScreenName;
 
     public void setUserId(String userId) {
         mUserId = userId;
@@ -57,6 +74,68 @@ public class ContactSummaryFragment extends Fragment {
                         .build());
             }
         });
+        loadTwitterImages(view, "Visa");
         return view;
+    }
+
+
+    private void loadTwitterImages(final View parent, final String screenName) {
+        ConfigurationBuilder builder = new ConfigurationBuilder();
+        builder.setOAuthConsumerKey(BuildConfig.TWITTER_CONSUMER_KEY);
+        builder.setOAuthConsumerSecret(BuildConfig.TWITTER_CONSUMER_SECRET);
+        builder.setOAuthAccessToken(Preferences.getDefault(getActivity()).getString(Preferences.KEY_TWITTER_OAUTH_TOKEN, ""));
+        builder.setOAuthAccessTokenSecret(Preferences.getDefault(getActivity()).getString(Preferences.KEY_TWITTER_OAUTH_SECRET, ""));
+        builder.setIncludeEntitiesEnabled(true);
+        Configuration configuration = builder.build();
+        TwitterFactory factory = new TwitterFactory(configuration);
+        final Twitter twitter = factory.getInstance();
+
+        new AsyncTask<Void, Void, List<String>>() {
+            @Override
+            protected List<String> doInBackground(Void... params) {
+                try {
+                    List<twitter4j.Status> statuses = twitter.getUserTimeline(screenName);
+                    List<String> urls = new ArrayList<String>();
+                    for (twitter4j.Status status: statuses) {
+                        if (status.getMediaEntities().length > 0) {
+                            MediaEntity entity = status.getMediaEntities()[0];
+                            urls.add(entity.getMediaURL());
+                        }
+                    }
+
+                } catch (TwitterException e) {
+                    // TODO
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(List<String> urls) {
+                if (urls != null) {
+                    int count = 0;
+                    for (String url: urls) {
+                        Picasso.with(getActivity()).load(url).placeholder(R.drawable.hoge)
+                                .transform(new RoundTransformation())
+                                .error(R.drawable.g2013).into((ImageView) parent.findViewById(imageViewId(count)));
+                        count++;
+                        if (count == 3) {
+                            return;
+                        }
+                    }
+                }
+                super.onPostExecute(urls);
+            }
+        }.execute();
+    }
+
+    private int imageViewId(int count) {
+        if (count == 0) {
+            return R.id.image01;
+        } else if (count == 1) {
+            return R.id.image02;
+        } else if (count == 2) {
+            return R.id.image03;
+        }
+        return 0;
     }
 }

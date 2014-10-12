@@ -23,7 +23,15 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.TabPageIndicator;
 
+import java.util.List;
 import java.util.Set;
+
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class ContactDetailActivity extends FragmentActivity {
     public static final String EXTRA_KEY_USER_ID = "contactDetail:extra:userId";
