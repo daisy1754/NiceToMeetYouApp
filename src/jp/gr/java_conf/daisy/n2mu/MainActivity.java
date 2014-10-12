@@ -159,18 +159,20 @@ public class MainActivity extends SalesforceActivity {
 
             }
             mIdToContact = new HashMap<String, Contact>();
-            mIdToContact.put("1", new Contact("Jon Smith", "ABC, inc", "https://s3.amazonaws.com/uifaces/faces/twitter/brad_frost/128.jpg"));
-            mIdToContact.put("2", new Contact("Make Nish", "Sales and force", "https://s3.amazonaws.com/uifaces/faces/twitter/c_southam/128.jpg"));
-            mIdToContact.put("3", new Contact("Amanda Lee", "Hidetachi", "https://s3.amazonaws.com/uifaces/faces/twitter/adellecharles/128.jpg"));
-            mIdToContact.put("4", new Contact("Kent Suzuki", "Goooooogle", "https://s3.amazonaws.com/uifaces/faces/twitter/rssems/128.jpg"));
-            mIdToContact.put("5", new Contact("Nishida Ume", "UmaUma", "https://s3.amazonaws.com/uifaces/faces/twitter/sindresorhus/128.jpg"));
+            mIdToContact.put("1", new Contact("1", "Jon Smith", "ABC, inc", "https://s3.amazonaws.com/uifaces/faces/twitter/brad_frost/128.jpg"));
+            mIdToContact.put("2", new Contact("2", "Make Nish", "Sales and force", "https://s3.amazonaws.com/uifaces/faces/twitter/c_southam/128.jpg"));
+            mIdToContact.put("3", new Contact("3", "Amanda Lee", "Hidetachi", "https://s3.amazonaws.com/uifaces/faces/twitter/adellecharles/128.jpg"));
+            mIdToContact.put("4", new Contact("4", "Kent Suzuki", "Goooooogle", "https://s3.amazonaws.com/uifaces/faces/twitter/rssems/128.jpg"));
+            mIdToContact.put("5", new Contact("5", "Nishida Ume", "UmaUma", "https://s3.amazonaws.com/uifaces/faces/twitter/sindresorhus/128.jpg"));
             updateContactTable();
             contactList.setAdapter(
                     new EventContactAdapter(MainActivity.this, mDateToContactId));
             contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                     Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
+                    intent.putExtra(ContactDetailActivity.EXTRA_KEY_USER_ID, 1);
                     startActivity(intent);
                 }
             });
@@ -242,6 +244,7 @@ public class MainActivity extends SalesforceActivity {
                         JSONObject contact = records.getJSONObject(i);
                         mIdToContact.put(contact.getString("Id"),
                                 new Contact(
+                                        contact.getString("Id"),
                                         contact.getString("Name"),
                                         contact.get("Title") == null ? "" : contact.getString("Title"),
                                         contact.getString("PhotoUrl")));
@@ -249,13 +252,17 @@ public class MainActivity extends SalesforceActivity {
                     updateContactTable();
                     mProgressDialog.dismiss();
                     ListView contactList = (ListView) findViewById(R.id.contacts_list);
-                    contactList.setAdapter(
-                            new EventContactAdapter(MainActivity.this, mDateToContactId));
+                    final EventContactAdapter adapter = new EventContactAdapter(MainActivity.this, mDateToContactId);
+                    contactList.setAdapter(adapter);
                     contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
-                            startActivity(intent);
+                            Object item = adapter.getItem(position);
+                            if (item instanceof Contact) {
+                                Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
+                                intent.putExtra(ContactDetailActivity.EXTRA_KEY_USER_ID, ((Contact) item).getUserId());
+                                startActivity(intent);
+                            }
                         }
                     });
                     contactList.setDivider(null);
@@ -394,14 +401,20 @@ public class MainActivity extends SalesforceActivity {
     }
 
     private class Contact {
+        private final String mUserId;
         private final String mName;
         private final String mTitle;
         private final String mUrl;
 
-        public Contact(String name, String title, String url) {
+        public Contact(String userId, String name, String title, String url) {
+            mUserId = userId;
             mName = name;
             mTitle = title.equals("null") ? "" : title;
             mUrl = (url != null && url.equals("null")) ? null : url;
+        }
+
+        public String getUserId() {
+            return mUserId;
         }
 
         public String getName() {

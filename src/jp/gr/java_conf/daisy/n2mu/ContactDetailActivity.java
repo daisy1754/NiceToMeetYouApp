@@ -16,6 +16,8 @@ import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
 public class ContactDetailActivity extends FragmentActivity {
+    public static final String EXTRA_KEY_USER_ID = "contactDetail:extra:userId";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
