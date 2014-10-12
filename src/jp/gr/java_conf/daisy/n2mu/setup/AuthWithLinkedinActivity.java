@@ -22,7 +22,8 @@ public class AuthWithLinkedinActivity extends Activity {
     public static final String OAUTH_CALLBACK_HOST = "callback";
     public static final String OAUTH_CALLBACK_URL = OAUTH_CALLBACK_SCHEME + "://" + OAUTH_CALLBACK_HOST;
 
-    private final LinkedInOAuthService oAuthService = LinkedInOAuthServiceFactory.getInstance().createLinkedInOAuthService(BuildConfig.LINKEDIN_CONSUMER_KEY, BuildConfig.LINKEDIN_CONSUMER_SECRET);
+    private final LinkedInOAuthService oAuthService = LinkedInOAuthServiceFactory.getInstance().createLinkedInOAuthService(
+            BuildConfig.LINKEDIN_CONSUMER_KEY, BuildConfig.LINKEDIN_CONSUMER_SECRET);
     private LinkedInRequestToken liToken;
 
     static boolean mAuthStarted = false;
@@ -56,7 +57,7 @@ public class AuthWithLinkedinActivity extends Activity {
                 LinkedInAccessToken accessToken = oAuthService.getOAuthAccessToken(liToken, verifier);
                 Preferences.getDefaultEditor(AuthWithLinkedinActivity.this)
                         .putString(Preferences.KEY_LINKEDIN_ACCESS_TOKEN, accessToken.getToken())
-                        .putString(Preferences.KEY_LINKEDIN_ACCESS_TOKEN, accessToken.getTokenSecret())
+                        .putString(Preferences.KEY_LINKEDIN_ACCESS_TOKEN_SECRET, accessToken.getTokenSecret())
                         .putLong(Preferences.KEY_LINKEDIN_ACCESS_TOKEN_EXPIRES, accessToken.getExpirationTime().getTime())
                         .commit();
                 return null;
