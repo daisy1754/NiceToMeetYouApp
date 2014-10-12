@@ -101,11 +101,11 @@ public class MainActivity extends SalesforceActivity {
 
             }
             mIdToContact = new HashMap<String, Contact>();
-            mIdToContact.put("1", new Contact("Jon Smith", "ABC, inc", "http://uifaces.com/brad_frost"));
-            mIdToContact.put("2", new Contact("Make Nish", "Salesforce", "http://uifaces.com/c_southam"));
-            mIdToContact.put("3", new Contact("Amanda Lee", "Hitachi", "http://uifaces.com/adellecharles"));
-            mIdToContact.put("4", new Contact("Kent Suzuki", "UBC, inc", "http://uifaces.com/rssems"));
-            mIdToContact.put("5", new Contact("Nishida Ume", "OPP, inc", "http://uifaces.com/sindresorhus"));
+            mIdToContact.put("1", new Contact("Jon Smith", "ABC, inc", "https://s3.amazonaws.com/uifaces/faces/twitter/brad_frost/128.jpg"));
+            mIdToContact.put("2", new Contact("Make Nish", "Salesforce", "https://s3.amazonaws.com/uifaces/faces/twitter/c_southam/128.jpg"));
+            mIdToContact.put("3", new Contact("Amanda Lee", "Hitachi", "https://s3.amazonaws.com/uifaces/faces/twitter/adellecharles/128.jpg"));
+            mIdToContact.put("4", new Contact("Kent Suzuki", "UBC, inc", "https://s3.amazonaws.com/uifaces/faces/twitter/rssems/128.jpg"));
+            mIdToContact.put("5", new Contact("Nishida Ume", "OPP, inc", "https://s3.amazonaws.com/uifaces/faces/twitter/sindresorhus/128.jpg"));
             contactList.setAdapter(
                     new EventContactAdapter(MainActivity.this, mDateToContactId));
             contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
