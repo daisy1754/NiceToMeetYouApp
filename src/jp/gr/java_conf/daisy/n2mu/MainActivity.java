@@ -97,7 +97,7 @@ public class MainActivity extends SalesforceActivity {
         mProgressDialog.setMessage("Loading Your Schedule...");
         mProgressDialog.show();
 
-        setTitle("Upcoming Events");
+        setTitle("Upcoming Appointments");
         getActionBar().setDisplayShowHomeEnabled(false);
     }
 
